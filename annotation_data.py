@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,22 @@ import bpy
 from mathutils import Vector
 
 SCHEMA_VERSION = "1.0"
+
+
+def safe_object_type_name(value: str) -> str:
+    """Convert Object type into a portable filename stem."""
+    name = value.strip().lower()
+    name = re.sub(r"[^a-z0-9._-]+", "_", name)
+    name = re.sub(r"_+", "_", name).strip("._-")
+    return name or "annotation"
+
+
+def default_output_path() -> str:
+    object_type = safe_object_type_name(bpy.context.scene.aivision_object_type)
+    if bpy.data.filepath:
+        base_dir = Path(bpy.data.filepath).parent
+        return str(base_dir / "annotations" / f"{object_type}.json")
+    return f"//annotations/{object_type}.json"
 
 
 def utc_now() -> str:
@@ -126,6 +143,24 @@ def build_annotation() -> dict[str, Any]:
             "status": "draft",
         },
     }
+
+
+def validate_annotation() -> list[str]:
+    scene = bpy.context.scene
+    errors: list[str] = []
+    if not scene.aivision_annotator.strip():
+        errors.append("请填写 Annotator（标注人姓名）")
+    if not scene.aivision_object_type.strip() or scene.aivision_object_type == "unknown":
+        errors.append("请填写 Object type（物体类别）")
+    if not scene.aivision_model_source:
+        errors.append("请在 Source model 中选择原始 STL/OBJ/GLB 文件")
+    elif sha256_file(source_path()) is None:
+        errors.append("Source model 文件不存在或无法读取")
+    if not any(obj.get("aivision_role") == "part" for obj in scene.objects if obj.type == "MESH"):
+        errors.append("尚未标注任何部件，请先点击 Add selected as part")
+    if not any(obj.get("aivision_role") == "joint" for obj in scene.objects):
+        errors.append("尚未标注任何关节，请先添加 joint")
+    return errors
 
 
 def validate_annotation() -> list[str]:

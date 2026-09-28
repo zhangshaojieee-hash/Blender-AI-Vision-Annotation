@@ -1,6 +1,6 @@
 # Blender AI Vision Annotation Helper
 
-当前版本：`v0.3.0`
+当前版本：`v0.4.0`
 
 用于给 STL、OBJ、GLB/GLTF 三维模型做第一轮人工结构标注。插件记录物体类别、部件、关节候选、关节轴、置信度和模型指纹，输出 JSON 供后续几何算法和 AI 方向使用。
 
@@ -50,13 +50,13 @@ Blender 可能缓存旧的 Python 子模块，仅取消勾选再勾选不一定�
 model_01_张三.blend
 ```
 
-保存后，插件默认输出路径为：
+保存后，插件会根据 `Object type` 自动输出到：
 
 ```text
-<当前 blend 文件夹>/annotations/annotation.json
+<当前 blend 文件夹>/annotations/<object_type>.json
 ```
 
-这是跨电脑默认路径，不依赖任何人的 Windows 用户名。
+例如 `Object type` 填写 `two_link_leg`，输出文件就是 `annotations/two_link_leg.json`。这是跨电脑默认路径，不依赖任何人的 Windows 用户名。
 
 ### 2.2 填写 Project 区域
 
@@ -66,7 +66,7 @@ model_01_张三.blend
 - `Annotator`：标注人姓名或 GitHub 用户名；
 - `Object confidence`：对整个物体类别判断的确定程度；
 - `Source model`：原始 STL/OBJ/GLB 文件；
-- `Output JSON`：当前模型对应的 JSON 文件路径。
+- `Output JSON`：由插件自动生成，通常不需要手动修改。
 
 建议每个模型使用独立文件名，例如：
 

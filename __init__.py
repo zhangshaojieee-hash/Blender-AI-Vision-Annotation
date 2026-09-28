@@ -3,7 +3,7 @@
 bl_info = {
     "name": "AI Vision Annotation Helper",
     "author": "4D Printing AI Vision Team",
-    "version": (0, 3, 0),
+    "version": (0, 4, 0),
     "blender": (4, 0, 0),
     "location": "View3D > Sidebar > AI Vision",
     "description": "Record part and joint annotations as versioned JSON.",

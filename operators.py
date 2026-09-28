@@ -1,7 +1,7 @@
 import bpy
 from mathutils import Vector
 
-from .annotation_data import export_annotation, utc_now, validate_annotation
+from .annotation_data import default_output_path, export_annotation, utc_now, validate_annotation
 
 
 def selected_meshes():
@@ -82,7 +82,9 @@ class AIVISION_OT_export(bpy.types.Operator):
             self.report({"ERROR"}, "；".join(errors[:2]))
             return {"CANCELLED"}
         try:
-            path = export_annotation(context.scene.aivision_output_path)
+            output_path = default_output_path()
+            context.scene.aivision_output_path = output_path
+            path = export_annotation(output_path)
         except (OSError, ValueError) as exc:
             self.report({"ERROR"}, str(exc))
             return {"CANCELLED"}

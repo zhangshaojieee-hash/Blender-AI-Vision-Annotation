@@ -10,7 +10,7 @@ def marked_joints(context):
 
 
 class AIVISION_PT_panel(bpy.types.Panel):
-    bl_label = "AI Vision Annotation v0.3.0"
+    bl_label = "AI Vision Annotation v0.4.0"
     bl_idname = "AIVISION_PT_panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
