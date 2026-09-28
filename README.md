@@ -6,21 +6,7 @@
 
 本插件只记录人工标注候选，不会自动生成磁场强度、线圈电流或 `MAG_ON/MAG_OFF` 设备命令。
 
-## 1. 给组员的快速开始
-
-每位组员先从 GitHub 下载本项目，再准备自己的标注工作目录：
-
-```text
-my_annotation_task/
-  model.stl
-  model.blend
-  annotations/
-    model_姓名.json
-```
-
-不要修改原始模型文件。多人标注时，每个人使用自己的 `.blend` 和 JSON 文件。
-
-## 2. 安装插件
+## 1. 安装插件
 
 1. 从 GitHub 下载 ZIP，或将 `blender_annotation_addon` 文件夹压缩为 `blender_annotation_addon.zip`。
 2. 打开 Blender 4.x/5.x。
@@ -54,9 +40,9 @@ blender_annotation_addon/
 
 Blender 可能缓存旧的 Python 子模块，仅取消勾选再勾选不一定会刷新代码。
 
-## 3. 第一次标注前的准备
+## 2. 第一次标注前的准备
 
-### 3.1 保存 Blender 工程
+### 2.1 保存 Blender 工程
 
 先导入模型，再执行 `File > Save As`，例如保存为：
 
@@ -72,7 +58,7 @@ model_01_张三.blend
 
 这是跨电脑默认路径，不依赖任何人的 Windows 用户名。
 
-### 3.2 填写 Project 区域
+### 2.2 填写 Project 区域
 
 在 `AI Vision` 面板的 `Project` 中填写：
 
@@ -90,9 +76,9 @@ annotations/obj_01_腿_张三.json
 
 不要让不同模型或不同标注人的结果覆盖同一个 `annotation.json`。
 
-## 4. 标注部件
+## 3. 标注部件
 
-### 4.1 一个部件对应一个 Blender 对象
+### 3.1 一个部件对应一个 Blender 对象
 
 当前插件按 Blender 对象记录部件，而不是按编辑模式中的局部面记录。
 
@@ -114,7 +100,7 @@ annotations/obj_01_腿_张三.json
 7. 对第二个杆件重复，命名为 `link_b`；
 8. 分别点击 `Add selected as part`。
 
-### 4.2 检查部件列表
+### 3.2 检查部件列表
 
 成功后面板应显示：
 
@@ -126,7 +112,7 @@ link_b confidence=0.70
 
 没有点击 `Add selected as part` 的对象不会进入 JSON 的 `parts`。
 
-## 5. 标注关节
+## 4. 标注关节
 
 1. 选中与关节相连的部件，例如 `link_a` 和 `link_b`；
 2. 将 3D 光标放到关节候选位置；
@@ -150,7 +136,7 @@ joint_01 (...) c=0.70
 
 如果同一位置已经有一个关节，插件会阻止重复创建。已有错误标注时使用 `Remove last joint`，或点击 `Clear annotation marks` 后重新标注。
 
-## 6. 置信度填写规范
+## 5. 置信度填写规范
 
 置信度是标注者对标签正确性的主观确定程度，不是模型预测概率。
 
@@ -165,7 +151,7 @@ joint_01 (...) c=0.70
 
 即使置信度较高，`needs_human_review` 仍应保留为 `true`，因为这属于人工候选标注，不是经过几何、材料和硬件验证的最终方案。
 
-## 7. 导出 JSON
+## 6. 导出 JSON
 
 点击 `Save annotation JSON`。插件会自动记录：
 
@@ -189,32 +175,7 @@ joint_01 (...) c=0.70
 
 缺少这些信息时，导出会被阻止并在 Blender 状态栏提示错误。
 
-## 8. 多人协作规范
-
-### 8.1 不要多人共同覆盖一个 JSON
-
-推荐文件名：
-
-```text
-annotations/
-  obj_01_腿_张三.json
-  obj_01_腿_李四.json
-  obj_02_手臂_张三.json
-```
-
-如果多人标注同一个模型，使用相同模型文件和不同标注人文件名，之后比较一致性。
-
-### 8.2 每个人只提交自己的文件
-
-不要提交：
-
-- `.blend1` 临时备份；
-- `__pycache__`；
-- Blender 用户配置；
-- 大型未压缩中间文件；
-- 未经许可的第三方模型。
-
-### 8.3 提交前检查
+## 7. 导出前检查
 
 ```text
 [ ] JSON 能正常打开
@@ -229,37 +190,7 @@ annotations/
 [ ] needs_human_review 状态没有被误改
 ```
 
-## 9. GitHub 提交示例
-
-首次使用：
-
-```powershell
-git clone https://github.com/zhangshaojieee-hash/Blender-AI-Vision-Annotation-v0.2.0.git
-```
-
-提交标注结果前先查看状态：
-
-```powershell
-git status
-```
-
-添加自己的 JSON：
-
-```powershell
-git add annotations\obj_01_腿_张三.json
-git commit -m "add annotation for obj 01"
-git push
-```
-
-多人直接向同一仓库提交时，建议每人建立自己的分支：
-
-```powershell
-git switch -c annotation-zhangsan
-```
-
-更推荐组员把 JSON 提交到 Pull Request，由组长检查后合并。
-
-## 10. 当前限制
+## 8. 当前限制
 
 - 关节位置使用 Blender 场景坐标，必须确认场景缩放和单位；
 - 关节轴目前只能选择 X、Y、Z 主轴；
@@ -269,7 +200,7 @@ git switch -c annotation-zhangsan
 - AI 候选必须经过人工确认、几何约束和硬件约束；
 - 没有材料标定数据时，不得把候选写成真实设备参数。
 
-## 11. 遇到问题时提交的信息
+## 9. 遇到问题时提交的信息
 
 请在 GitHub Issue 或项目群中同时提供：
 
