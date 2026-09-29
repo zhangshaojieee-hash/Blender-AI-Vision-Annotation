@@ -17,16 +17,18 @@
 7. 回到 3D View，按 `N` 打开侧栏。
 8. 选择 `AI Vision` 标签。
 
-压缩包内部第一层必须直接包含：
+Blender 安装用 ZIP 的内部第一层必须直接包含以下文件：
 
 ```text
-blender_annotation_addon/
-  __init__.py
-  annotation_data.py
-  operators.py
-  panel.py
-  properties.py
+__init__.py
+annotation_data.py
+operators.py
+panel.py
+properties.py
+README.md
 ```
+
+不要选择内部仍然包含 `blender_annotation_addon/` 文件夹的外层 ZIP，否则 Blender 会提示 `__init__.py 位于文件夹内，而不是顶层级`。
 
 ### 更新旧版本
 
